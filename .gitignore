@@ -1,0 +1,9 @@
+*.py[cod]
+MANIFEST
+*.egg-info
+dist
+build
+
+.pydevproject
+.project
+
