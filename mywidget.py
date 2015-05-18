@@ -14,6 +14,9 @@ class MyWidget(Gtk.Box):
     __gtype_name__ = 'MyWidget'
     
     entry = GtkChild()
+    
+    # Alternative way to specify multiple widgets
+    #label1, entry = GtkChild.widgets(2)
 
     def __init__(self, text):
         super(Gtk.Box, self).__init__()

@@ -172,6 +172,11 @@ class _GtkChild(object):
     '''
     
     __slots__ = []
+    
+    @staticmethod
+    def widgets(count):
+        '''Allows silliness like foo,bar = GtkChild()'''
+        return [_GtkChild() for _ in xrange(count)]
 
     
 # Future shim support if this makes it into PyGI
