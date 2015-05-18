@@ -136,18 +136,23 @@ class _GtkTemplate(object):
     __ui_path__ = None
     
     @staticmethod
-    def set_ui_path(path):
+    def set_ui_path(*path):
         '''
             Call this *before* loading anything that uses GtkTemplate,
             or it will fail to load your template file
             
+            :param path: one or more path elements, will be joined together
+                         to create the final path
+            
             TODO: Alternatively, could wait until first class instantiation
                   before registering templates? Would need a metaclass...
         '''
-        _GtkTemplate.__ui_path__ = abspath(path)
+        _GtkTemplate.__ui_path__ = abspath(join(*path))
     
     
     def __init__(self, ui):
+        if isinstance(ui, (list, tuple)):
+            ui = join(ui)
         if self.__ui_path__ is not None:
             self.ui = join(_GtkTemplate.__ui_path__, ui)
         else:
