@@ -34,6 +34,9 @@ class MyWidget(Gtk.Box):
     def entry_changed(self, widget):
         print("The entry text changed: %s" % self.entry.get_text())
 
+    @GtkCallback
+    def on_MyWidget_destroy(self, widget):
+        print("MyWidget destroyed")
 
 if __name__ == '__main__':
     

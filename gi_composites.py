@@ -29,11 +29,25 @@ __all__ = ['GtkTemplate', 'GtkChild', 'GtkCallback']
 
 
 def _connect_func(builder, obj, signal_name, handler_name,
-                  connect_object, flags):
+                  connect_object, flags, cls):
     '''Handles GtkBuilder signal connect events'''
-         
+    
+    # Deal with signals on the template object itself
+    if connect_object is None:
+        if not isinstance(obj, cls):
+            warnings.warn("Cannot determine object to connect '%s' to" %
+                          handler_name)
+            return
+        
+        connect_object = obj
+    elif not isinstance(connect_object, cls):
+        warnings.warn("Handler '%s' user_data is not set to an instance of '%s'" %
+                      (handler_name, cls))
+        return
+    
     if handler_name not in connect_object.__gtemplate_methods__:
-        errmsg = "@GtkCallback handler '%s' was not found for signal '%s'" % (handler_name, signal_name)
+        errmsg = "@GtkCallback handler '%s' was not found for signal '%s'" % \
+                 (handler_name, signal_name)
         warnings.warn(errmsg)
         return
     
@@ -72,7 +86,7 @@ def _register_template(cls, ui_path):
     
     # Have to setup a special connect function to connect at template init
     # because the methods are not bound yet
-    cls.set_connect_func(_connect_func)
+    cls.set_connect_func(_connect_func, cls)
     
     # This might allow nested composites.. haven't tested it
     bound_methods.update(getattr(cls, '__gtemplate_methods__', set()))
