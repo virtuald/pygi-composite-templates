@@ -35,14 +35,16 @@ def _connect_func(builder, obj, signal_name, handler_name,
     # Deal with signals on the template object itself
     if connect_object is None:
         if not isinstance(obj, cls):
-            warnings.warn("Cannot determine object to connect '%s' to" %
-                          handler_name)
+            errmsg = "Cannot determine '%s' object to connect '%s' to" % \
+                     (cls, handler_name)
+            warnings.warn(errmsg)
             return
         
         connect_object = obj
     elif not isinstance(connect_object, cls):
-        warnings.warn("Handler '%s' user_data is not set to an instance of '%s'" %
-                      (handler_name, cls))
+        errmsg = "Handler '%s' user_data is not set to an instance of '%s'" % \
+                 (handler_name, cls)
+        warnings.warn(errmsg)
         return
     
     if handler_name not in connect_object.__gtemplate_methods__:
