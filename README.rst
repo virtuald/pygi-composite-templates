@@ -15,8 +15,13 @@ This implementation was inspired by this `blog post <https://blogs.gnome.org/tvb
 and some comments on it, though I should point out that several years ago I
 independently created something that was `very similar for PyGTK <https://github.com/frc2423/2013/blob/master/driver_station/ui/util.py#L25>`_.
 
+There is a bug on the GTK bugzilla to get composite templates implemented in
+PyGI: https://bugzilla.gnome.org/show_bug.cgi?id=701843 (it's been open for
+awhile, I created this implementation before I realized it existed).
+
 Ideally, this will get integrated into PyGI itself and will no longer be
-necessary.
+necessary. Until then, if you find a bug, please report it or submit a
+pull request on github!
 
 Requirements
 ============

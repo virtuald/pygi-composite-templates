@@ -3,8 +3,7 @@
 from __future__ import print_function
 
 from gi.repository import Gtk
-from gi_composites import GtkTemplate, GtkCallback, GtkChild
-
+from gi_composites import GtkTemplate
 
 @GtkTemplate(ui='mywidget.ui')
 class MyWidget(Gtk.Box):
@@ -13,10 +12,10 @@ class MyWidget(Gtk.Box):
     # name in mywidget.ui (__main__+MyWidget)
     __gtype_name__ = 'MyWidget'
     
-    entry = GtkChild()
+    entry = GtkTemplate.Child()
     
     # Alternative way to specify multiple widgets
-    #label1, entry = GtkChild.widgets(2)
+    #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self, text):
         super(Gtk.Box, self).__init__()
@@ -26,17 +25,21 @@ class MyWidget(Gtk.Box):
         
         self.entry.set_text(text)
     
-    @GtkCallback
-    def button_clicked(self, widget):
+    @GtkTemplate.Callback
+    def button_clicked(self, widget, user_data):
+        # 'object' attribute (user-data in glade) is set
         print("The button was clicked with entry text: %s" % self.entry.get_text())
+        print("The user-data is %s" % user_data)
 
-    @GtkCallback
+    @GtkTemplate.Callback
     def entry_changed(self, widget):
+        # 'object' attribute (user-data in glade) is not set
         print("The entry text changed: %s" % self.entry.get_text())
 
-    @GtkCallback
+    @GtkTemplate.Callback
     def on_MyWidget_destroy(self, widget):
         print("MyWidget destroyed")
+
 
 if __name__ == '__main__':
     
