@@ -1,7 +1,7 @@
 pygi-composite-templates
 ========================
 
-A prototype implementation of Gtk+ composite templates for PyGI. This library
+A prototype implementation of Gtk+ composite widget templates for PyGI. This library
 will allow you to declare a composite widget, and mark particular properties
 as widgets or methods as signals that are declared in a GtkBuilder XML file
 created with glade. Usage of this functionality reduces the amount of
@@ -15,8 +15,8 @@ This implementation was inspired by this `blog post <https://blogs.gnome.org/tvb
 and some comments on it, though I should point out that several years ago I
 independently created something that was `very similar for PyGTK <https://github.com/frc2423/2013/blob/master/driver_station/ui/util.py#L25>`_.
 
-There is a bug on the GTK bugzilla to get composite templates implemented in
-PyGI: https://bugzilla.gnome.org/show_bug.cgi?id=701843 (it's been open for
+There is a `bug open at GTK's bugzilla <https://bugzilla.gnome.org/show_bug.cgi?id=701843>`_
+to get composite widget templates implemented in PyGI (it's been open for
 awhile, I created this implementation before I realized it existed).
 
 Ideally, this will get integrated into PyGI itself and will no longer be
@@ -28,6 +28,13 @@ Requirements
 
 * Currently only tested on Linux, GTK 3.14, and Python 2.7.
 * Composite templates requires GTK 3.10 or greater
+
+Installation
+============
+
+This project is easily installed via pip:
+
+    pip install pygi-composite-templates
 
 Usage
 =====
