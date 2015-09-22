@@ -62,8 +62,7 @@ def _connect_func(builder, obj, signal_name, handler_name,
 def _register_template(cls, ui_path):
     '''Registers the template for the widget and hooks init_template'''
     
-    with open(ui_path, 'rb') as fp:
-        cls.set_template(GLib.Bytes.new(fp.read()))
+    cls.set_template_from_resource(ui_path)
     
     bound_methods = set()
     bound_widgets = set()
