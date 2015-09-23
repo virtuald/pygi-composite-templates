@@ -39,7 +39,7 @@ This project is easily installed via pip:
 Usage
 =====
 
-See mywidget.py on the github repo for an simple yet complete example.
+See `example/mywidget.py` on the github repo for an simple yet complete example.
 
 Author
 ======

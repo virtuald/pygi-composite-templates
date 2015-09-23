@@ -1,11 +1,35 @@
 #!/usr/bin/env python
+#
+# To run this example, first compile the GLib Resource file containing
+# the UI description:
+#
+#    cd example
+#    glib-compile-resources --target=mywidget.gresource mywidget.gresource.xml
+#    ./mywidget.py
+#
 
 from __future__ import print_function
+
+# Find and load the compiled resources - see note at top of this
+# file. This must be done before any classes using resources are
+# defined, since the UI file is loaded then, not when the class is
+# used. This would normally be done by the application's launch
+# script, at the same time as setting Gettext domains, etc.
+
+import os
+import sys
+from gi.repository import Gio
+
+scriptdir = os.path.dirname(os.path.abspath(sys.argv[0]))
+resource = Gio.resource_load(os.path.join(scriptdir, 'mywidget.gresource'))
+Gio.Resource._register(resource)
+
+# Now we can define the custom widget.
 
 from gi.repository import Gtk
 from gi_composites import GtkTemplate
 
-@GtkTemplate(ui='mywidget.ui')
+@GtkTemplate(ui='/org/example/MyWidget/mywidget.ui')
 class MyWidget(Gtk.Box):
 
     # Required else you would need to specify the full module
@@ -42,7 +66,6 @@ class MyWidget(Gtk.Box):
 
 
 if __name__ == '__main__':
-    
     win = Gtk.Window()
     win.connect('delete-event', Gtk.main_quit)
     
