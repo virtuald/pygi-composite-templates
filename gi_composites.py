@@ -21,6 +21,7 @@ from os.path import abspath, join
 import inspect
 import warnings
 
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 
@@ -59,10 +60,10 @@ def _connect_func(builder, obj, signal_name, handler_name,
     template_inst.__connected_template_signals__.add(handler_name)
 
 
-def _register_template(cls, ui_path):
+def _register_template(cls, template_bytes):
     '''Registers the template for the widget and hooks init_template'''
-    
-    cls.set_template_from_resource(ui_path)
+
+    cls.set_template(template_bytes)
     
     bound_methods = set()
     bound_widgets = set()
@@ -160,6 +161,13 @@ class _GtkTemplate(object):
                 def __init__(self):
                     super(Foo, self).__init__()
                     self.init_template()
+
+        The 'ui' parameter can either be a file path or a GResource resource
+        path::
+
+            @GtkTemplate(ui='/org/example/foo.ui')
+            class Foo(Gtk.Box):
+                pass
                 
         To connect a signal to a method on your instance, do::
             
@@ -199,8 +207,9 @@ class _GtkTemplate(object):
     @staticmethod
     def set_ui_path(*path):
         '''
-            Call this *before* loading anything that uses GtkTemplate,
-            or it will fail to load your template file
+            If using file paths instead of resources, call this *before*
+            loading anything that uses GtkTemplate, or it will fail to load
+            your template file
             
             :param path: one or more path elements, will be joined together
                          to create the final path
@@ -212,15 +221,27 @@ class _GtkTemplate(object):
     
     
     def __init__(self, ui):
-        if isinstance(ui, (list, tuple)):
-            ui = join(ui)
-        if self.__ui_path__ is not None:
-            self.ui = join(_GtkTemplate.__ui_path__, ui)
-        else:
-            self.ui = ui
+        self.ui = ui
     
     def __call__(self, cls):
-        _register_template(cls, self.ui)
+
+        # Load the template either from a resource path or a file
+        # - Prefer the resource path first
+
+        try:
+            template_bytes = Gio.resources_lookup_data(self.ui, Gio.ResourceLookupFlags.NONE)
+        except GLib.GError:
+            ui = self.ui
+            if isinstance(ui, (list, tuple)):
+                ui = join(ui)
+
+            if _GtkTemplate.__ui_path__ is not None:
+                ui = join(_GtkTemplate.__ui_path__, ui)
+
+            with open(ui, 'rb') as fp:
+                template_bytes = GLib.Bytes.new(fp.read())
+
+        _register_template(cls, template_bytes)
         return cls
 
 

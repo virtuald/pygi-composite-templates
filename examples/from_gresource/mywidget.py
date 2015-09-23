@@ -3,12 +3,20 @@
 # To run this example, first compile the GLib Resource file containing
 # the UI description:
 #
-#    cd example
 #    glib-compile-resources --target=mywidget.gresource mywidget.gresource.xml
 #    ./mywidget.py
 #
 
 from __future__ import print_function
+
+import sys
+from os.path import abspath, join, dirname
+
+scriptdir = dirname(abspath(__file__))
+
+# This is only required to make the example with without requiring installation
+# - Most of the time, you shouldn't use this hack
+sys.path.insert(0, join(scriptdir, '..', '..'))
 
 # Find and load the compiled resources - see note at top of this
 # file. This must be done before any classes using resources are
@@ -16,12 +24,9 @@ from __future__ import print_function
 # used. This would normally be done by the application's launch
 # script, at the same time as setting Gettext domains, etc.
 
-import os
-import sys
 from gi.repository import Gio
 
-scriptdir = os.path.dirname(os.path.abspath(sys.argv[0]))
-resource = Gio.resource_load(os.path.join(scriptdir, 'mywidget.gresource'))
+resource = Gio.resource_load(join(scriptdir, 'mywidget.gresource'))
 Gio.Resource._register(resource)
 
 # Now we can define the custom widget.

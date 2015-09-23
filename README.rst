@@ -39,7 +39,9 @@ This project is easily installed via pip:
 Usage
 =====
 
-See `example/mywidget.py` on the github repo for an simple yet complete example.
+See `examples` on the github repo for simple yet complete examples. There are
+two examples, one using a ui file embedded in a GResource, and the other using
+local file paths.
 
 Author
 ======
