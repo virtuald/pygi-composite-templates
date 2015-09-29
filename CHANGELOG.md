@@ -1,3 +1,7 @@
+0.2.1 - 2015-09-28
+------------------
+* Allow initialization of templates from GLib resources or from file
+
 0.2.0 - 2015-05-21
 ------------------
 * Allow initializing multiple widgets
