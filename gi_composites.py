@@ -145,7 +145,7 @@ class _Child(object):
                 label1    \
                 label2    = GtkTemplate.Child.widgets(3)
         '''
-        return [_Child() for _ in xrange(count)]
+        return [_Child() for _ in range(count)]
 
 
 class _GtkTemplate(object):
