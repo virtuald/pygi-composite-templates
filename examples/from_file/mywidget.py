@@ -48,12 +48,15 @@ class MyWidget(Gtk.Box):
         print("MyWidget destroyed")
 
 
+class MySubWidget(MyWidget):
+    pass
+
 if __name__ == '__main__':
     
     win = Gtk.Window()
     win.connect('delete-event', Gtk.main_quit)
     
-    widget = MyWidget("The entry text!")
+    widget = MySubWidget("The entry text!")
     win.add(widget)
     
     win.show_all()
