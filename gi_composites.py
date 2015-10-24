@@ -63,6 +63,9 @@ def _connect_func(builder, obj, signal_name, handler_name,
 def _register_template(cls, template_bytes):
     '''Registers the template for the widget and hooks init_template'''
 
+    # This implementation won't work if there are nested templates, but
+    # we can't do that anyways due to PyGObject limitations so it's ok
+
     cls.set_template(template_bytes)
     
     bound_methods = set()
@@ -86,11 +89,7 @@ def _register_template(cls, template_bytes):
     # because the methods are not bound yet
     cls.set_connect_func(_connect_func, cls)
     
-    # This might allow nested composites.. haven't tested it
-    bound_methods.update(getattr(cls, '__gtemplate_methods__', set()))
     cls.__gtemplate_methods__ = bound_methods
-    
-    bound_widgets.update(getattr(cls, '__gtemplate_widgets__', set()))
     cls.__gtemplate_widgets__ = bound_widgets
     
     base_init_template = cls.init_template
@@ -99,6 +98,12 @@ def _register_template(cls, template_bytes):
 
 def _init_template(self, cls, base_init_template):
     '''This would be better as an override for Gtk.Widget'''
+    
+    # TODO: could disallow using a metaclass.. but this is good enough
+    # .. if you disagree, feel free to fix it and issue a PR :)
+    if self.__class__ is not cls:
+        raise TypeError("Inheritance from classes with @GtkTemplate decorators "
+                        "is not allowed at this time")
     
     connected_signals = set()
     self.__connected_template_signals__ = connected_signals
@@ -115,8 +120,8 @@ def _init_template(self, cls, base_init_template):
             #      it's not currently possible for us to know which 
             #      one is broken either -- but the stderr should show
             #      something useful with a Gtk-CRITICAL message)
-            raise AttributeError("A missing child widget was set using " +
-                                 "GtkTemplate.Child and the entire"
+            raise AttributeError("A missing child widget was set using "
+                                 "GtkTemplate.Child and the entire "
                                  "template is now broken (widgets: %s)" %
                                  ', '.join(self.__gtemplate_widgets__))
     
@@ -188,6 +193,9 @@ class _GtkTemplate(object):
         included with PyGI I suspect it might be better to do this
         in the GObject metaclass (or similar) so that init_template
         can be called automatically instead of forcing the user to do it.
+        
+        .. note:: Due to limitations in PyGObject, you may not inherit from
+                  python objects that use the GtkTemplate decorator.
     '''
     
     __ui_path__ = None
@@ -225,6 +233,10 @@ class _GtkTemplate(object):
     
     def __call__(self, cls):
 
+        # Nested templates don't work
+        if hasattr(cls, '__gtemplate_methods__'):
+            raise TypeError("Cannot nest template classes")
+        
         # Load the template either from a resource path or a file
         # - Prefer the resource path first
 
