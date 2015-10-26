@@ -28,6 +28,7 @@ Requirements
 
 * Currently only tested on Linux, GTK 3.14, and Python 2.7.
 * Composite templates requires GTK 3.10 or greater
+* PyGObject 3.13.2 or greater
 
 Installation
 ============

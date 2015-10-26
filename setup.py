@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='pygi-composite-templates',
-      version='0.2.3',
+      version='0.2.4',
       description='An implementation of GTK3 composite templates for PyGI',
       author='Dustin Spicuzza',
       author_email='dustin@virtualroadside.com',
